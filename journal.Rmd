@@ -145,6 +145,44 @@ bike_orderlines_wrangled_tbl %>%
 ## 7.3 RDS ----
 bike_orderlines_wrangled_tbl %>% 
   write_rds("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
+  
+# Challenge_Chapter 3
+
+library(tidyverse)
+library(rvest)
+library(xopen)
+library(jsonlite)
+library(glue)
+library(stringi)
+
+## names
+url_urban          <- "https://www.rosebikes.de/fahrräder/urban"
+xopen(url_urban)
+
+html_urban         <- read_html(url_urban)
+
+bikes_urban_models <- html_urban %>%
+  
+  # Get the nodes
+  html_nodes(css = ".catalog-category-bikes__title") %>%
+  html_text() %>%
+  str_remove_all(pattern = "\n")
+
+bikes_urban_models
+## price
+url_urban          <- "https://www.rosebikes.de/fahrräder/urban"
+html_urban         <- read_html(url_urban)
+
+bikes_urban_price         <- html_urban %>%
+
+html_nodes(css = "div.catalog-category-bikes__price-title") %>%
+  html_text() %>%
+  str_remove_all(pattern = "\n")
+
+bikes_urban_price
+
+tibble(bikes_urban_models, bikes_urban_price)
+
 
 
 **IMPORTANT:** You can delete everything in here and start fresh. You might want to start by not deleting anything above this line until you know what that stuff is doing.
