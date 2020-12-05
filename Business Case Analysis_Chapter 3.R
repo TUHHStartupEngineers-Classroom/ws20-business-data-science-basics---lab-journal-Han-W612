@@ -259,3 +259,139 @@ bike_data_cleaned_tbl <- bike_data_tbl %>%
   select(id, model, year, frame_material, price_euro, everything())
 
 saveRDS(bike_data_cleaned_tbl, "bike_data_cleaned_tbl.rds")
+
+# 3.1a Get all color variations for each bike
+
+# Extract all bike urls
+bike_url_vec <- bike_data_cleaned_tbl %>% 
+  pull(url)
+
+# Create function to get the variations
+get_colors <- function(url) {
+  
+  url %>%
+    
+    read_html() %>%
+    
+    # Get all 'script nodes' and convert to char
+    html_nodes(css = "script") %>%
+    as.character() %>%
+    
+    # Select the node, that contains 'window.deptsfra'
+    str_subset(pattern = "window.deptsfra") %>%
+    
+    # remove the chars that do not belong to the json
+    # 1. replace at the beginning everything until the first "{" with ""
+    str_replace("^[^\\{]+", "") %>%
+    # 2. replace at the end everything after the last "}" with ""
+    str_replace("[^\\}]+$", "") %>%
+    
+    # Convert from json to an r object and pick the relevant values
+    fromJSON() %>%
+    purrr::pluck("productDetail", "variationAttributes", "values", 1, "value")
+}
+
+# Run the function over all urls and add result to bike_data_cleaned_tbl
+# This will take a long time (~ 20-30 minutes) because we have to iterate over many bikes
+bike_data_colors_tbl <- bike_data_cleaned_tbl %>% 
+  mutate(colors = map(bike_url_vec, get_colors))
+
+saveRDS(bike_data_colors_tbl, "bike_data_colors_tbl.rds")
+
+library(furrr)     # Parallel Processing using purrr (iteration)
+plan("multiprocess")
+bike_data_colors_tbl <- bike_data_cleaned_tbl %>% 
+  mutate(colors = future_map(bike_url_vec, get_colors))
+
+# 3.2 Create the urls for each variation
+
+bike_data_colors_tbl <- bike_data_colors_tbl %>%
+  
+  # Create entry for each color variation
+  unnest(colors) %>%
+  
+  # Merge url and query parameters for the colors
+  mutate(url_color = glue("{url}?dwvar_{id}_pv_rahmenfarbe={colors}")) %>%
+  select(-url) %>%
+  
+  # Use stringi to replace the last dash with the HTLM format of a dash (%2F)
+  # Only if there is a dash in the color column
+  mutate(url_color = ifelse(str_detect(colors, pattern = "/"),
+                            
+                            # if TRUE --> replace      
+                            stringi::stri_replace_last_fixed(url_color, "/", "%2F"),
+                            
+                            # ELSE --> take the original url
+                            url_color))
+
+bike_data_colors_tbl %>% glimpse()
+
+# Create function
+get_sizes <- function(url) {
+  
+  json <- url %>%
+    
+    read_html() %>%
+    
+    # Get all 'script nodes' and convert to char
+    html_nodes(css = "script") %>%
+    as.character() %>%
+    
+    # Select the node, that contains 'window.deptsfra'
+    str_subset(pattern = "window.deptsfra") %>%
+    
+    # remove the chars that do not belong to the json
+    # 1. replace at the beginning everything until the first "{" with ""
+    str_replace("^[^\\{]+", "") %>%
+    # 2. replace at the end everything after the last "}" with ""
+    str_replace("[^\\}]+$", "") %>%
+    
+    # Convert from json to an r object and pick the relevant values
+    fromJSON(flatten = T) %>%
+    purrr::pluck("productDetail", "variationAttributes", "values", 2) %>%
+    
+    # select(id, value, available, availability)# %>%
+    select(id, value, availability.onlyXLeftNumber) %>%
+    
+    # Rename
+    rename(id_size = id) %>%
+    rename(size = value) %>%
+    rename(stock_availability = availability.onlyXLeftNumber) %>%
+    
+    # Conver to tibble
+    as_tibble()
+  
+}
+
+# Pull url vector
+bike_url_color_vec <- bike_data_colors_tbl %>% 
+  pull(url_color)
+
+# Map
+bike_data_sizes_tbl <- bike_data_colors_tbl %>% 
+  mutate(size = future_map(bike_url_color_vec, get_sizes))
+
+# Unnest
+bike_data_sizes_tbl <- bike_data_sizes_tbl %>% 
+  unnest(size)
+
+saveRDS(bike_data_sizes_tbl, "bike_data_sizes_tbl.rds")
+
+library(RSelenium)
+# Start the headless browser
+driver <- rsDriver(browser = "firefox")
+remDr  <- driver$client
+
+# Open the url
+url    <- "https://www.canyon.com/en-de/road-bikes/race-bikes/aeroad/"
+remDr$navigate(url)
+
+# Locate and click the button
+button <- remDr$findElement(using = "css", ".productGrid__viewMore")
+button$clickElement()
+
+# Get the html
+html <- remDr$getPageSource() %>% 
+  unlist() %>% 
+  read_html()
+
