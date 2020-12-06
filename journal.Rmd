@@ -277,7 +277,7 @@ setDT(assignee_tbl)
 setDT(patent_assignee_tbl)
 setDT(uspc_tbl)
 
-# Task1_Patent Dominance - top 10 US companies
+## Task1_Patent Dominance - top 10 US companies
 
 setnames(assignee_tbl,"id","assignee_id")
 tic()
@@ -321,9 +321,11 @@ organization                                     N
 10 Apple Inc.                                   21821
 '''
 
-# Task2_Recent patent activity - top 10 US companies in 2019
+## Task2_Recent patent activity - top 10 US companies in 2019
 
-#once I try to convert patent data to data.table, the Rstudio gets stuck, the following code can not run as well.
+'''
+once I try to convert patent data to data.table, the Rstudio gets stuck, the following code can not run as well.
+'''
 patent_2019_tbl<- patent_tbl[ lubridate::year(date) == "2019"]
 
 setnames(patent_2019_tb,"id","patent_id")
@@ -333,8 +335,103 @@ combined_data_c2 <- merge(x = combined_data_c1, y = patent_2019_tb,
                           all.x = TRUE, 
                           all.y = FALSE)
 
+## Task3_Innovation in Tech - top 5 USPTO tech main classess
 
-# Task3_Innovation in Tech - top 5 USPTO tech main classess
+
+# Challenge_Chapter 5
+# Challenge 1
+
+# 1. Load libraries and data
+
+library(tidyverse)
+library(ggplot2)
+
+covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
+
+# 2. Data manipluation
+
+covid_cumulative_cases_tbl <- covid_data_tbl %>%
+  select(countriesAndTerritories, cases, month, year) %>%
+  filter(year == "2020") %>%
+  filter(countriesAndTerritories %in% c("Germany",
+                                        "United_Kingdom",
+                                        "France",
+                                        "Spain",
+                                        "Lithuania",
+                                        "United_States_of_America")) %>%
+  group_by(countriesAndTerritories,month)%>%
+  summarize(cumulative_cases = sum(cases)) %>%
+  ungroup()
+covid_cumulative_cases_tbl
+
+# 3. Data visualization
+
+covid_cumulative_cases_tbl %>%
+  # Canvas
+  ggplot(aes(x=month, y=cumulative_cases, color=countriesAndTerritories)) +
+  
+  # Geometries
+  geom_smooth(method = "loess", span = 0.2) +
+  
+  # Formatting
+  scale_x_continuous(breaks = covid_cumulative_cases_tbl$month,
+                     labels = month(covid_cumulative_cases_tbl$month, label = T)) +
+  
+  scale_y_continuous(labels = scales::dollar_format(scale = 1e-6, 
+                                                    prefix = "",
+                                                    suffix = "M")) +
+  scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))+
+  labs(title = "COVID-19 confirmed cases worldwide",
+       x = "Year 2020",
+       y = "Cumulative Cases")
+
+# Challenge 2
+
+library(maps)
+library(tidyverse)
+library(ggplot2)
+library(scales)
+library(data.table)
+library(vroom)
+library(tictoc)
+
+world <- map_data("world")
+
+covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
+
+mortality_rate_tbl <- covid_data_tbl %>%
+  select(countriesAndTerritories, deaths, popData2019) %>%
+  mutate(across(countriesAndTerritories, str_replace_all, "_", " ")) %>%
+  mutate(countriesAndTerritories = case_when(
+    countriesAndTerritories == "United Kingdom" ~ "UK",
+    countriesAndTerritories == "United States of America" ~ "USA",
+    countriesAndTerritories == "Czechia" ~ "Czech Republic",
+    TRUE ~ countriesAndTerritories
+  ))%>%
+  group_by(countriesAndTerritories)%>%
+  summarize(total_deaths = sum(deaths), population = max(popData2019), mortality_rate = deaths/popData2019) %>%
+  ungroup()
+mortality_rate_tbl
+
+setDT(mortality_rate_tbl)
+setDT(world)
+
+covid_map <- left_join(x = world, y = mortality_rate_tbl, by=c("region" = "countriesAndTerritories")) 
+
+covid_map %>% glimpse()
+
+covid_map %>%
+  # Canvas
+  ggplot(aes(x=long, y=lat)) +
+  # Geometries
+  geom_map(aes(map_id=region, fill=mortality_rate), map = world) +
+  # Formatting 
+  scale_fill_continuous(low = "black",
+                        high = "red",
+                        labels = scales::percent) +
+  labs(title = "Confirmed COVID-19 deaths relative to the size of the population")
+
+
 
 
 **IMPORTANT:** You can delete everything in here and start fresh. You might want to start by not deleting anything above this line until you know what that stuff is doing.
