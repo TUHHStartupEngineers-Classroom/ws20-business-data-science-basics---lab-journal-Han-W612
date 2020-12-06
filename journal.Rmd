@@ -15,23 +15,23 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
-#Challenge_Chapter2 - 
+# Challenge_Chapter2 - 
 
-# 1.0 Load libraries ----
+## 1.0 Load libraries ----
 library(tidyverse)
 library(readxl)
 library(lubridate)
 library("writexl")
 
-# 2.0 Importing Files ----
+## 2.0 Importing Files ----
 bikes_tbl      <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
 orderlines_tbl <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
 bikeshops_tbl  <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
 
-# 3.0 Examining Data ----
-###Clicking on the file in the environment tab.
+## 3.0 Examining Data ----
+### Clicking on the file in the environment tab.
 
-# 4.0 Joining Data ----
+## 4.0 Joining Data ----
 left_join(orderlines_tbl, bikes_tbl, by = c("product.id" = "bike.id"))
 
 bike_orderlines_joined_tbl <- orderlines_tbl %>%
@@ -40,18 +40,18 @@ bike_orderlines_joined_tbl <- orderlines_tbl %>%
 
 bike_orderlines_joined_tbl %>% glimpse()
 
-# 5.0 Wrangling Data ----
+## 5.0 Wrangling Data ----
 bike_orderlines_wrangled_city_separated_tbl <- bike_orderlines_joined_tbl %>%
-  # 5.1 Separate category name
+###   5.1 Separate category name
   separate(col    = category,
            into   = c("category.1", "category.2", "category.3"),
            sep    = " - ") %>%
   separate(col    = location,
            into   = c("City", "State"),
            sep    = ", ") %>% 
-  # 5.2 Add the total price (price * quantity) 
+###   5.2 Add the total price (price * quantity) 
   mutate(total.price = price * quantity) %>%
-  # 5.3 Optional: Reorganize. Using select to grab or remove unnecessary columns
+###   5.3 Optional: Reorganize. Using select to grab or remove unnecessary columns
   select(-...1, -gender) %>%
   
   select(-ends_with(".id")) %>%
@@ -65,8 +65,8 @@ bike_orderlines_wrangled_city_separated_tbl <- bike_orderlines_joined_tbl %>%
   rename(bikeshop = name) %>%
   set_names(names(.) %>% str_replace_all("\\.", "_"))
 
-# 6.0 Business Insights ----
-## 6.1 Sales by location ----
+## 6.0 Business Insights ----
+### 6.1 Sales by location ----
 
 ### Step 1 - Manipulate
 sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
@@ -81,6 +81,7 @@ sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
                                      suffix = " €"))
 sales_by_location_tbl
 '''
+results
 State                         state_sales sales_formatted
    <chr>                               <dbl> <chr>          
  1 Baden-Württemberg                 6521090 6.521.090 €    
@@ -112,7 +113,7 @@ sales_by_location_tbl %>%
     x = "", 
     y = "Revenue"
   )
-## 6.2 Sales by location and year ----
+### 6.2 Sales by location and year ----
 
 ### Step 1 - Manipulate
 sales_by_state_year_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
@@ -160,17 +161,17 @@ sales_by_state_year_tbl %>%
   )
 
 
-# 7.0 Writing Files ----
+## 7.0 Writing Files ----
 
-## 7.1 Excel ----
+### 7.1 Excel ----
 install.packages("writexl")
 library("writexl")
 bike_orderlines_wrangled_tbl %>%
   write_xlsx("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.xlsx")
-## 7.2 CSV ----
+### 7.2 CSV ----
 bike_orderlines_wrangled_tbl %>% 
   write_csv("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.csv")
-## 7.3 RDS ----
+### 7.3 RDS ----
 bike_orderlines_wrangled_tbl %>% 
   write_rds("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
   
@@ -218,15 +219,16 @@ ikes_urban_models bikes_urban_price
 '''
 
 #Challenge_Chapter 4
-# 1.0 LIBRARIES ----
+
+## 1.0 LIBRARIES ----
 
 library(tidyverse)
 library(vroom)
 library(data.table)
 library(tictoc)
 
-# 2.0 DATA IMPORT ----
-## 2.1 Patent 
+## 2.0 DATA IMPORT ----
+### 2.1 Patent 
 col_types_patent <- list(
   id = col_character(),
   type = col_character(),
@@ -250,7 +252,7 @@ patent_tbl <- vroom(
 
 patent_tbl%>% glimpse()
 
-## 2.2 Assignee
+### 2.2 Assignee
 col_types_assignee <- list(
   id = col_character(),
   type = col_character(),
@@ -268,7 +270,7 @@ assignee_tbl <- vroom(
 
 assignee_tbl%>% glimpse()
 
-## 2.3 Patent_assignee
+### 2.3 Patent_assignee
 
 col_types_patent_assignee <- list(
   patent_id = col_character(),
@@ -285,7 +287,7 @@ patent_assignee_tbl <- vroom(
 
 patent_assignee_tbl%>% glimpse()
 
-## 2.4 USPC
+### 2.4 USPC
 
 col_types_uspc <- list(
   uuid = col_character(),
@@ -304,7 +306,7 @@ uspc_tbl <- vroom(
 
 uspc_tbl%>% glimpse()
 
-# 3.0 Set data.table
+## 3.0 Set data.table
 
 setDT(patent_tbl) #once I try to convert patent data to data.table, the Rstudio gets stuck.
 setDT(assignee_tbl)
@@ -340,6 +342,7 @@ setorderv(top_10_US_companies, c("N", "organization"), order = -1)
 as_tibble(top_10_US_companies, .rows = 10)
 
 '''
+results
 A tibble: 10 x 2
 organization                                     N
 <chr>                                        <int>  
@@ -375,14 +378,14 @@ combined_data_c2 <- merge(x = combined_data_c1, y = patent_2019_tb,
 # Challenge_Chapter 5
 # Challenge 1
 
-# 1. Load libraries and data
+## 1. Load libraries and data
 
 library(tidyverse)
 library(ggplot2)
 
 covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
 
-# 2. Data manipluation
+## 2. Data manipluation
 
 covid_cumulative_cases_tbl <- covid_data_tbl %>%
   select(countriesAndTerritories, cases, month, year) %>%
@@ -398,7 +401,7 @@ covid_cumulative_cases_tbl <- covid_data_tbl %>%
   ungroup()
 covid_cumulative_cases_tbl
 
-# 3. Data visualization
+## 3. Data visualization
 
 covid_cumulative_cases_tbl %>%
   # Canvas
