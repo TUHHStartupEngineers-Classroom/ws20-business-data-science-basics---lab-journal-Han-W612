@@ -376,16 +376,16 @@ combined_data_c2 <- merge(x = combined_data_c1, y = patent_2019_tb,
 
 
 # Challenge_Chapter 5
-# Challenge 1
+## Challenge 1
 
-## 1. Load libraries and data
+### 1. Load libraries and data
 
 library(tidyverse)
 library(ggplot2)
 
 covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
 
-## 2. Data manipluation
+### 2. Data manipluation
 
 covid_cumulative_cases_tbl <- covid_data_tbl %>%
   select(countriesAndTerritories, cases, month, year) %>%
@@ -401,7 +401,7 @@ covid_cumulative_cases_tbl <- covid_data_tbl %>%
   ungroup()
 covid_cumulative_cases_tbl
 
-## 3. Data visualization
+### 3. Data visualization
 
 covid_cumulative_cases_tbl %>%
   # Canvas
@@ -422,7 +422,7 @@ covid_cumulative_cases_tbl %>%
        x = "Year 2020",
        y = "Cumulative Cases")
 
-# Challenge 2
+## Challenge 2
 
 library(maps)
 library(tidyverse)
