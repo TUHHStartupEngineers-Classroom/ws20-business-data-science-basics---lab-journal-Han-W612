@@ -1,15 +1,17 @@
 ---
 title: "Journal (reproducible report)"
 author: "Han Wang"
-date: "2020-11-05"
+date: '2020-11-05'
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
   html_document:
-    toc: true
-    toc_float: true
-    collapsed: false
-    number_sections: true
+    toc: yes
+    toc_float: yes
+    collapsed: no
+    number_sections: yes
     toc_depth: 3
-    #code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -61,14 +63,14 @@ bike_orderlines_wrangled_city_separated_tbl <- bike_orderlines_joined_tbl %>%
   select(order.id, contains("order"), contains("model"), contains("category"),
          price, quantity, total.price,
          everything()) %>%
-  # 5.4 Rename columns because we actually wanted underscores instead of the dots
+###   5.4 Rename columns because we actually wanted underscores instead of the dots
   rename(bikeshop = name) %>%
   set_names(names(.) %>% str_replace_all("\\.", "_"))
 
 ## 6.0 Business Insights ----
-### 6.1 Sales by location ----
+###   6.1 Sales by location ----
 
-### Step 1 - Manipulate
+###   Step 1 - Manipulate
 sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
   
   select(State, City, total_price) %>%
@@ -81,7 +83,7 @@ sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
                                      suffix = " €"))
 sales_by_location_tbl
 '''
-results
+result:
 State                         state_sales sales_formatted
    <chr>                               <dbl> <chr>          
  1 Baden-Württemberg                 6521090 6.521.090 €    
@@ -95,7 +97,7 @@ State                         state_sales sales_formatted
  9 North Rhine-Westphalia           21200613 21.200.613 €   
 10 Saxony                            2230245 2.230.245 €    
 '''
-### Step 2 - Visualize
+###   Step 2 - Visualize
 sales_by_location_tbl %>%
   ggplot(aes(x = State, y = state_sales)) +
   geom_col(fill = "#2DC6D6") + 
@@ -113,9 +115,9 @@ sales_by_location_tbl %>%
     x = "", 
     y = "Revenue"
   )
-### 6.2 Sales by location and year ----
+###   6.2 Sales by location and year ----
 
-### Step 1 - Manipulate
+###   Step 1 - Manipulate
 sales_by_state_year_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
   select(order_date, total_price, State) %>%
   mutate(year = year(order_date)) %>%
@@ -131,6 +133,7 @@ sales_by_state_year_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
 
 sales_by_state_year_tbl 
 '''
+result:
 State              year   sales sales_formatted
    <chr>             <dbl>   <dbl> <chr>          
  1 Baden-Württemberg  2015 1031924 1.031.924 €    
@@ -144,7 +147,7 @@ State              year   sales sales_formatted
  9 Bavaria            2018 1168783 1.168.783 €    
 10 Bavaria            2019 1730872 1.730.872 €    
 '''
-### Step 2 - Visualize
+###   Step 2 - Visualize
 sales_by_state_year_tbl %>%
   
   ggplot(aes(x = year, y = sales, fill = State)) +
@@ -163,15 +166,15 @@ sales_by_state_year_tbl %>%
 
 ## 7.0 Writing Files ----
 
-### 7.1 Excel ----
+###  7.1 Excel ----
 install.packages("writexl")
 library("writexl")
 bike_orderlines_wrangled_tbl %>%
   write_xlsx("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.xlsx")
-### 7.2 CSV ----
+###   7.2 CSV ----
 bike_orderlines_wrangled_tbl %>% 
   write_csv("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.csv")
-### 7.3 RDS ----
+###   7.3 RDS ----
 bike_orderlines_wrangled_tbl %>% 
   write_rds("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
   
@@ -184,7 +187,7 @@ library(jsonlite)
 library(glue)
 library(stringi)
 
-## names
+## Names
 url_urban          <- "https://www.rosebikes.de/fahrräder/urban"
 xopen(url_urban)
 
@@ -198,7 +201,13 @@ bikes_urban_models <- html_urban %>%
   str_remove_all(pattern = "\n")
 
 bikes_urban_models
-## price
+
+'''
+result:
+[1] "CPTL"
+'''
+
+## Price
 url_urban          <- "https://www.rosebikes.de/fahrräder/urban"
 html_urban         <- read_html(url_urban)
 
@@ -210,12 +219,19 @@ html_nodes(css = "div.catalog-category-bikes__price-title") %>%
 
 bikes_urban_price
 
+'''
+result:
+[1] "ab 2.599,00 €"
+'''
+
 tibble(bikes_urban_models, bikes_urban_price)
 
 '''
-ikes_urban_models bikes_urban_price
+result:
+A tibble: 1 x 2
+  bikes_urban_models bikes_urban_price
   <chr>              <chr>            
-1 "CPTL "            ab 2.599,00 €    
+1 CPTL               ab 2.599,00 €    
 '''
 
 # Challenge_Chapter 4
@@ -228,7 +244,7 @@ library(data.table)
 library(tictoc)
 
 ## 2.0 DATA IMPORT ----
-### 2.1 Patent 
+###   2.1 Patent 
 col_types_patent <- list(
   id = col_character(),
   type = col_character(),
@@ -252,7 +268,7 @@ patent_tbl <- vroom(
 
 patent_tbl%>% glimpse()
 
-### 2.2 Assignee
+###   2.2 Assignee
 col_types_assignee <- list(
   id = col_character(),
   type = col_character(),
@@ -270,7 +286,7 @@ assignee_tbl <- vroom(
 
 assignee_tbl%>% glimpse()
 
-### 2.3 Patent_assignee
+###   2.3 Patent_assignee
 
 col_types_patent_assignee <- list(
   patent_id = col_character(),
@@ -287,7 +303,7 @@ patent_assignee_tbl <- vroom(
 
 patent_assignee_tbl%>% glimpse()
 
-### 2.4 USPC
+###   2.4 USPC
 
 col_types_uspc <- list(
   uuid = col_character(),
@@ -308,7 +324,7 @@ uspc_tbl%>% glimpse()
 
 ## 3.0 Set data.table
 
-setDT(patent_tbl) #once I try to convert patent data to data.table, the Rstudio gets stuck.
+setDT(patent_tbl)
 setDT(assignee_tbl)
 setDT(patent_assignee_tbl)
 setDT(uspc_tbl)
@@ -360,32 +376,99 @@ organization                                     N
 
 ## Task2_Recent patent activity - top 10 US companies in 2019
 
-'''
-once I try to convert patent data to data.table, the Rstudio gets stuck, the following code can not run as well.
-'''
 patent_2019_tbl<- patent_tbl[ lubridate::year(date) == "2019"]
 
-setnames(patent_2019_tb,"id","patent_id")
-
-combined_data_c2 <- merge(x = combined_data_c1, y = patent_2019_tb, 
+setnames(patent_2019_tbl,"id","patent_id")
+tic()
+combined_data_2 <- merge(x = combined_data_1, y = patent_2019_tbl, 
                           by    = "patent_id", 
                           all.x = TRUE, 
                           all.y = FALSE)
+toc()
+
+setkey(combined_data_2, "type")
+key(combined_data_2)
+
+setorderv(combined_data_2, c("type", "organization"))
+
+combined_data_US_2019<- combined_data_2[ !(type=='na')&(type == '2')]
+combined_data_US_2019
+
+tic()
+top_10_US_companies_2019 <- combined_data_US_2019[!is.na(organization), .N, by = organization]
+toc()
+setkey(top_10_US_companies_2019, "organization")
+key(top_10_US_companies_2019)
+setorderv(top_10_US_companies_2019, c("N", "organization"), order = -1)
+as_tibble(top_10_US_companies_2019, .rows = 10)
+
+                          
+'''
+result:
+A tibble: 10 x 2
+   organization                                     N
+   <chr>                                        <int>
+ 1 International Business Machines Corporation 139092
+ 2 General Electric Company                     47122
+ 3 Intel Corporation                            42157
+ 4 Hewlett-Packard Development Company, L.P.    35573
+ 5 Microsoft Corporation                        30086
+ 6 Micron Technology, Inc.                      28001
+ 7 QUALCOMM Incorporated                        24703
+ 8 Texas Instruments Incorporated               24182
+ 9 Xerox Corporation                            23174
+10 Apple Inc.                                   21821
+'''
 
 ## Task3_Innovation in Tech - top 5 USPTO tech main classess
 
+tic()
+combined_data_3 <- merge(x = combined_data_2, y = uspc_tbl, 
+                         by    = "patent_id", 
+                         all.x = TRUE, 
+                         all.y = FALSE)
+toc()
+
+setkey(combined_data_3, "type")
+key(combined_data_3)
+
+setorderv(combined_data_3, c("type", "organization"))
+
+combined_data_USPTO<- combined_data_3[ !(type=='na')]
+combined_data_USPTO
+
+combined_data_USPTO <- combined_data_USPTO[!(mainclass_id == 'na')]
+
+setkey(combined_data_USPTO, "organization")
+key(combined_data_USPTO)
+
+setkey(combined_data_USPTO, c(organization","mainclass_id"), order = -1) 
+
+as_tibble(combined_data_USPTO, .rows = 5)
+
+'''
+result:
+A tibble: 5 x 13
+  patent_id assignee_id type  name_first name_last organization location_id date       num_claims
+  <chr>     <chr>       <chr> <chr>      <chr>     <chr>        <chr>       <date>          <dbl>
+1 5892087   per_cvXuOQ… 0     Jae-Kun    Yang      NA           dc99cbee-a… NA                 NA
+2 6171069   per_CEtRrm… 0     Boris      Khaytin   NA           a5d08634-d… NA                 NA
+3 6171069   per_CEtRrm… 0     Boris      Khaytin   NA           a5d08634-d… NA                 NA
+4 6171069   per_CEtRrm… 0     Boris      Khaytin   NA           a5d08634-d… NA                 NA
+5 6335478   per_euhLCQ… 0     Mang       Ou-Yang   NA           2e263cb0-2… NA                 NA
+'''
 
 # Challenge_Chapter 5
 ## Challenge 1
 
-### 1. Load libraries and data
+### 1.0 Load libraries and data
 
 library(tidyverse)
 library(ggplot2)
 
 covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
 
-### 2. Data manipluation
+### 2.0 Data manipluation
 
 covid_cumulative_cases_tbl <- covid_data_tbl %>%
   select(countriesAndTerritories, cases, month, year) %>%
@@ -401,7 +484,7 @@ covid_cumulative_cases_tbl <- covid_data_tbl %>%
   ungroup()
 covid_cumulative_cases_tbl
 
-### 3. Data visualization
+### 3.0 Data visualization
 
 covid_cumulative_cases_tbl %>%
   # Canvas

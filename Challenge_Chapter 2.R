@@ -66,6 +66,24 @@ sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
                                      prefix = "", 
                                      suffix = " €"))
 sales_by_location_tbl
+'''
+results
+# A tibble: 12 x 3
+   State                         state_sales sales_formatted
+   <chr>                               <dbl> <chr>          
+ 1 Baden-Württemberg                 6521090 6.521.090 €    
+ 2 Bavaria                           6742819 6.742.819 €    
+ 3 Berlin                            1128433 1.128.433 €    
+ 4 Bremen                           10653499 10.653.499 €   
+ 5 Hamburg                           3874756 3.874.756 €    
+ 6 Hesse                             1558901 1.558.901 €    
+ 7 Lower Saxony                      4107115 4.107.115 €    
+ 8 Mecklenburg-Western Pomerania      618974 618.974 €      
+ 9 North Rhine-Westphalia           21200613 21.200.613 €   
+10 Saxony                            2230245 2.230.245 €    
+11 Saxony-Anhalt                      569614 569.614 €      
+12 Schleswig-Holstein                3224749 3.224.749 €   
+'''
 # Step 2 - Visualize
 sales_by_location_tbl %>%
   ggplot(aes(x = State, y = state_sales)) +
@@ -101,6 +119,25 @@ sales_by_state_year_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
                                      suffix = " €"))
 
 sales_by_state_year_tbl 
+
+'''
+results:
+# A tibble: 60 x 4
+   State              year   sales sales_formatted
+   <chr>             <dbl>   <dbl> <chr>          
+ 1 Baden-Württemberg  2015 1031924 1.031.924 €    
+ 2 Baden-Württemberg  2016 1561658 1.561.658 €    
+ 3 Baden-Württemberg  2017 1224152 1.224.152 €    
+ 4 Baden-Württemberg  2018 1114327 1.114.327 €    
+ 5 Baden-Württemberg  2019 1589029 1.589.029 €    
+ 6 Bavaria            2015 1301461 1.301.461 €    
+ 7 Bavaria            2016 1129852 1.129.852 €    
+ 8 Bavaria            2017 1411851 1.411.851 €    
+ 9 Bavaria            2018 1168783 1.168.783 €    
+10 Bavaria            2019 1730872 1.730.872 €    
+# … with 50 more rows
+'''
+
 # Step 2 - Visualize
 sales_by_state_year_tbl %>%
   

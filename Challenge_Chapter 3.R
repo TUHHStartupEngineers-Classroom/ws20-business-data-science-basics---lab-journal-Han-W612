@@ -24,6 +24,10 @@ bikes_urban_models <- html_urban %>%
   str_remove_all(pattern = "\n")
 
 bikes_urban_models
+'''
+result:
+[1] "CPTL"
+'''
 #price
 url_urban          <- "https://www.rosebikes.de/fahrräder/urban"
 html_urban         <- read_html(url_urban)
@@ -36,4 +40,17 @@ html_nodes(css = "div.catalog-category-bikes__price-title") %>%
 
 bikes_urban_price
 
+'''
+result:
+[1] "ab 2.599,00 €"
+'''
+
 tibble(bikes_urban_models, bikes_urban_price)
+
+'''
+result:
+# A tibble: 1 x 2
+  bikes_urban_models bikes_urban_price
+  <chr>              <chr>            
+1 CPTL               ab 2.599,00 €    
+'''
