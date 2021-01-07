@@ -17,7 +17,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
-# Challenge_Chapter2 - 
+# Challenge_Chapter2
 
 ## 1.0 Load libraries ----
 library(tidyverse)
@@ -84,18 +84,19 @@ sales_by_location_tbl <- bike_orderlines_wrangled_city_separated_tbl %>%
 sales_by_location_tbl
 '''
 result:
+
 State                         state_sales sales_formatted
-   <chr>                               <dbl> <chr>          
- 1 Baden-Württemberg                 6521090 6.521.090 €    
- 2 Bavaria                           6742819 6.742.819 €    
- 3 Berlin                            1128433 1.128.433 €    
- 4 Bremen                           10653499 10.653.499 €   
- 5 Hamburg                           3874756 3.874.756 €    
- 6 Hesse                             1558901 1.558.901 €    
- 7 Lower Saxony                      4107115 4.107.115 €    
- 8 Mecklenburg-Western Pomerania      618974 618.974 €      
- 9 North Rhine-Westphalia           21200613 21.200.613 €   
-10 Saxony                            2230245 2.230.245 €    
+   <chr>                               <dbl> <chr>        
+ 1 Baden-Württemberg                 6521090 6.521.090 €   
+ 2 Bavaria                           6742819 6.742.819 €
+ 3 Berlin                            1128433 1.128.433 €
+ 4 Bremen                           10653499 10.653.499 €
+ 5 Hamburg                           3874756 3.874.756 €
+ 6 Hesse                             1558901 1.558.901 €
+ 7 Lower Saxony                      4107115 4.107.115 €
+ 8 Mecklenburg-Western Pomerania      618974 618.974 €
+ 9 North Rhine-Westphalia           21200613 21.200.613 €
+10 Saxony                            2230245 2.230.245 €
 '''
 ###   Step 2 - Visualize
 sales_by_location_tbl %>%
