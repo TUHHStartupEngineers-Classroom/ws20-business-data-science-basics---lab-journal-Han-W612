@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Han Wang" />
+
+<meta name="date" content="2020-11-05" />
+
+<title>Journal (reproducible report)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MyLabJournal</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="journal.html">Journal</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Class notes
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dictionary.html">Dictionary</a>
+    </li>
+    <li>
+      <a href="data_wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="ggplot_graphs.html">ggplot graphs</a>
+    </li>
+    <li>
+      <a href="machine_learning.html">machine learning</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="links.html">Links</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Journal (reproducible report)</h1>
+<h4 class="author">Han Wang</h4>
+<h4 class="date">2020-11-05</h4>
+
+</div>
+
+
+<div id="challenge_chapter2--" class="section level1">
+<h1><span class="header-section-number">1</span> Challenge_Chapter2 -</h1>
+<div id="load-libraries--" class="section level2">
+<h2><span class="header-section-number">1.1</span> 1.0 Load libraries —-</h2>
+<p>library(tidyverse) library(readxl) library(lubridate) library(“writexl”)</p>
+</div>
+<div id="importing-files--" class="section level2">
+<h2><span class="header-section-number">1.2</span> 2.0 Importing Files —-</h2>
+<p>bikes_tbl &lt;- read_excel(path = “DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx”) orderlines_tbl &lt;- read_excel(“DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx”) bikeshops_tbl &lt;- read_excel(“DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx”)</p>
+</div>
+<div id="examining-data--" class="section level2">
+<h2><span class="header-section-number">1.3</span> 3.0 Examining Data —-</h2>
+<div id="clicking-on-the-file-in-the-environment-tab." class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Clicking on the file in the environment tab.</h3>
+</div>
+</div>
+<div id="joining-data--" class="section level2">
+<h2><span class="header-section-number">1.4</span> 4.0 Joining Data —-</h2>
+<p>left_join(orderlines_tbl, bikes_tbl, by = c(“product.id” = “bike.id”))</p>
+<p>bike_orderlines_joined_tbl &lt;- orderlines_tbl %&gt;% left_join(bikes_tbl, by = c(“product.id” = “bike.id”)) %&gt;% left_join(bikeshops_tbl, by = c(“customer.id” = “bikeshop.id”))</p>
+<p>bike_orderlines_joined_tbl %&gt;% glimpse()</p>
+</div>
+<div id="wrangling-data--" class="section level2">
+<h2><span class="header-section-number">1.5</span> 5.0 Wrangling Data —-</h2>
+<p>bike_orderlines_wrangled_city_separated_tbl &lt;- bike_orderlines_joined_tbl %&gt;% ### 5.1 Separate category name separate(col = category, into = c(“category.1”, “category.2”, “category.3”), sep = " - “) %&gt;% separate(col = location, into = c(”City“,”State“), sep =”, ") %&gt;% ### 5.2 Add the total price (price * quantity) mutate(total.price = price * quantity) %&gt;% ### 5.3 Optional: Reorganize. Using select to grab or remove unnecessary columns select(-…1, -gender) %&gt;%</p>
+<p>select(-ends_with(“.id”)) %&gt;%</p>
+<p>bind_cols(bike_orderlines_joined_tbl %&gt;% select(order.id)) %&gt;%</p>
+<p>select(order.id, contains(“order”), contains(“model”), contains(“category”), price, quantity, total.price, everything()) %&gt;% ### 5.4 Rename columns because we actually wanted underscores instead of the dots rename(bikeshop = name) %&gt;% set_names(names(.) %&gt;% str_replace_all(“\.”, "_"))</p>
+</div>
+<div id="business-insights--" class="section level2">
+<h2><span class="header-section-number">1.6</span> 6.0 Business Insights —-</h2>
+<div id="sales-by-location--" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> 6.1 Sales by location —-</h3>
+</div>
+<div id="step-1---manipulate" class="section level3">
+<h3><span class="header-section-number">1.6.2</span> Step 1 - Manipulate</h3>
+<p>sales_by_location_tbl &lt;- bike_orderlines_wrangled_city_separated_tbl %&gt;%</p>
+<p>select(State, City, total_price) %&gt;% group_by(State) %&gt;% summarize(state_sales = sum(total_price)) %&gt;%</p>
+<p>mutate(sales_formatted = scales::dollar(state_sales, big.mark = “.”, decimal.mark = “,”, prefix = "“, suffix =” €“)) sales_by_location_tbl ’’’ results State state_sales sales_formatted <chr> <dbl> <chr><br />
+1 Baden-Württemberg 6521090 6.521.090 €<br />
+2 Bavaria 6742819 6.742.819 €<br />
+3 Berlin 1128433 1.128.433 €<br />
+4 Bremen 10653499 10.653.499 €<br />
+5 Hamburg 3874756 3.874.756 €<br />
+6 Hesse 1558901 1.558.901 €<br />
+7 Lower Saxony 4107115 4.107.115 €<br />
+8 Mecklenburg-Western Pomerania 618974 618.974 €<br />
+9 North Rhine-Westphalia 21200613 21.200.613 €<br />
+10 Saxony 2230245 2.230.245 €<br />
+’’’ ### Step 2 - Visualize sales_by_location_tbl %&gt;% ggplot(aes(x = State, y = state_sales)) + geom_col(fill =”#2DC6D6“) + geom_label(aes(label = sales_formatted)) + geom_smooth(method =”lm", se = FALSE) +</p>
+<p>scale_y_continuous(labels = scales::dollar_format(big.mark = “.”, decimal.mark = “,”, prefix = "“, suffix =” €")) +</p>
+<p>labs( title = “State Revenue by year”, subtitle = “-”, x = "“, y =”Revenue" )</p>
+</div>
+<div id="sales-by-location-and-year--" class="section level3">
+<h3><span class="header-section-number">1.6.3</span> 6.2 Sales by location and year —-</h3>
+</div>
+<div id="step-1---manipulate-1" class="section level3">
+<h3><span class="header-section-number">1.6.4</span> Step 1 - Manipulate</h3>
+<p>sales_by_state_year_tbl &lt;- bike_orderlines_wrangled_city_separated_tbl %&gt;% select(order_date, total_price, State) %&gt;% mutate(year = year(order_date)) %&gt;%</p>
+<p>group_by(State, year) %&gt;% summarise(sales = sum(total_price)) %&gt;% ungroup() %&gt;%</p>
+<p>mutate(sales_formatted = scales::dollar(sales, big.mark = “.”, decimal.mark = “,”, prefix = "“, suffix =” €"))</p>
+<p>sales_by_state_year_tbl ’’’ State year sales sales_formatted <chr> <dbl> <dbl> <chr><br />
+1 Baden-Württemberg 2015 1031924 1.031.924 €<br />
+2 Baden-Württemberg 2016 1561658 1.561.658 €<br />
+3 Baden-Württemberg 2017 1224152 1.224.152 €<br />
+4 Baden-Württemberg 2018 1114327 1.114.327 €<br />
+5 Baden-Württemberg 2019 1589029 1.589.029 €<br />
+6 Bavaria 2015 1301461 1.301.461 €<br />
+7 Bavaria 2016 1129852 1.129.852 €<br />
+8 Bavaria 2017 1411851 1.411.851 €<br />
+9 Bavaria 2018 1168783 1.168.783 €<br />
+10 Bavaria 2019 1730872 1.730.872 €<br />
+’’’ ### Step 2 - Visualize sales_by_state_year_tbl %&gt;%</p>
+<p>ggplot(aes(x = year, y = sales, fill = State)) + geom_col() + facet_wrap(~ State) + scale_y_continuous(labels = scales::dollar_format(big.mark = “.”, decimal.mark = “,”, prefix = "“, suffix =” €“)) + labs( title =”Revenue by year and state“, subtitle =”Each state presents differently“, fill =”State" # Changes the legend name )</p>
+</div>
+</div>
+<div id="writing-files--" class="section level2">
+<h2><span class="header-section-number">1.7</span> 7.0 Writing Files —-</h2>
+<div id="excel--" class="section level3">
+<h3><span class="header-section-number">1.7.1</span> 7.1 Excel —-</h3>
+<p>install.packages(“writexl”) library(“writexl”) bike_orderlines_wrangled_tbl %&gt;% write_xlsx(“DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.xlsx”) ### 7.2 CSV —- bike_orderlines_wrangled_tbl %&gt;% write_csv(“DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.csv”) ### 7.3 RDS —- bike_orderlines_wrangled_tbl %&gt;% write_rds(“DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds”)</p>
+</div>
+</div>
+</div>
+<div id="challenge_chapter-3" class="section level1">
+<h1><span class="header-section-number">2</span> Challenge_Chapter 3</h1>
+<p>library(tidyverse) library(rvest) library(xopen) library(jsonlite) library(glue) library(stringi)</p>
+<div id="names" class="section level2">
+<h2><span class="header-section-number">2.1</span> names</h2>
+<p>url_urban &lt;- “<a href="https://www.rosebikes.de/fahrräder/urban" class="uri">https://www.rosebikes.de/fahrräder/urban</a>” xopen(url_urban)</p>
+<p>html_urban &lt;- read_html(url_urban)</p>
+<p>bikes_urban_models &lt;- html_urban %&gt;%</p>
+<p># Get the nodes html_nodes(css = ".catalog-category-bikes__title“) %&gt;% html_text() %&gt;% str_remove_all(pattern =”")</p>
+<p>bikes_urban_models ## price url_urban &lt;- “<a href="https://www.rosebikes.de/fahrräder/urban" class="uri">https://www.rosebikes.de/fahrräder/urban</a>” html_urban &lt;- read_html(url_urban)</p>
+<p>bikes_urban_price &lt;- html_urban %&gt;%</p>
+<p>html_nodes(css = "div.catalog-category-bikes__price-title“) %&gt;% html_text() %&gt;% str_remove_all(pattern =”")</p>
+<p>bikes_urban_price</p>
+<p>tibble(bikes_urban_models, bikes_urban_price)</p>
+<p>’’’ ikes_urban_models bikes_urban_price <chr> <chr><br />
+1 “CPTL” ab 2.599,00 €<br />
+’’’</p>
+</div>
+</div>
+<div id="challenge_chapter-4" class="section level1">
+<h1><span class="header-section-number">3</span> Challenge_Chapter 4</h1>
+<div id="libraries--" class="section level2">
+<h2><span class="header-section-number">3.1</span> 1.0 LIBRARIES —-</h2>
+<p>library(tidyverse) library(vroom) library(data.table) library(tictoc)</p>
+</div>
+<div id="data-import--" class="section level2">
+<h2><span class="header-section-number">3.2</span> 2.0 DATA IMPORT —-</h2>
+<div id="patent" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> 2.1 Patent</h3>
+<p>col_types_patent &lt;- list( id = col_character(), type = col_character(), number = col_character(), country = col_character(), date = col_date(“%Y-%m-%d”), abstract = col_character(), title = col_character(), kind = col_character(), num_claims = col_double(), filename = col_character(), withdrawn = col_double() )</p>
+<p>patent_tbl &lt;- vroom( file = “DS_101/02_data_wrangling/patent.tsv”, delim = “, col_types = col_types_patent, na = c(”“,”NA“,”NULL") )</p>
+<p>patent_tbl%&gt;% glimpse()</p>
+</div>
+<div id="assignee" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> 2.2 Assignee</h3>
+<p>col_types_assignee &lt;- list( id = col_character(), type = col_character(), name_first = col_character(), name_last = col_character(), organization = col_character() )</p>
+<p>assignee_tbl &lt;- vroom( file = “DS_101/02_data_wrangling/assignee.tsv”, delim = “, col_types = col_types_patent, na = c(”“,”NA“,”NULL") )</p>
+<p>assignee_tbl%&gt;% glimpse()</p>
+</div>
+<div id="patent_assignee" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> 2.3 Patent_assignee</h3>
+<p>col_types_patent_assignee &lt;- list( patent_id = col_character(), assignee_id = col_character(), location_id = col_character() )</p>
+<p>patent_assignee_tbl &lt;- vroom( file = “DS_101/02_data_wrangling/patent_assignee.tsv”, delim = “, col_types = col_types_patent, na = c(”“,”NA“,”NULL") )</p>
+<p>patent_assignee_tbl%&gt;% glimpse()</p>
+</div>
+<div id="uspc" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> 2.4 USPC</h3>
+<p>col_types_uspc &lt;- list( uuid = col_character(), patent_id = col_character(), mainclass_id = col_character(), subclass_id = col_character(), sequence = col_integer() )</p>
+<p>uspc_tbl &lt;- vroom( file = “DS_101/02_data_wrangling/uspc.tsv”, delim = “, col_types = col_types_uspc, na = c(”“,”NA“,”NULL") )</p>
+<p>uspc_tbl%&gt;% glimpse()</p>
+</div>
+</div>
+<div id="set-data.table" class="section level2">
+<h2><span class="header-section-number">3.3</span> 3.0 Set data.table</h2>
+<p>setDT(patent_tbl) #once I try to convert patent data to data.table, the Rstudio gets stuck. setDT(assignee_tbl) setDT(patent_assignee_tbl) setDT(uspc_tbl)</p>
+</div>
+<div id="task1_patent-dominance---top-10-us-companies" class="section level2">
+<h2><span class="header-section-number">3.4</span> Task1_Patent Dominance - top 10 US companies</h2>
+<p>setnames(assignee_tbl,“id”,“assignee_id”) tic() combined_data_1 &lt;- merge(x = assignee_tbl, y = patent_assignee_tbl, by = “assignee_id”, all.x = TRUE, all.y = FALSE) toc()</p>
+<p>combined_data_1 %&gt;% glimpse()</p>
+<p>setkey(combined_data_1, “type”) key(combined_data_1)</p>
+<p>setorderv(combined_data_1, c(“type”, “organization”))</p>
+<p>combined_data_US&lt;- combined_data_1[ (type == 2)] combined_data_US</p>
+<p>tic() top_10_US_companies &lt;- combined_data_US[!is.na(organization), .N, by = organization] toc() setkey(top_10_US_companies, “organization”) key(top_10_US_companies) setorderv(top_10_US_companies, c(“N”, “organization”), order = -1) as_tibble(top_10_US_companies, .rows = 10)</p>
+<p>’’’ results A tibble: 10 x 2 organization N <chr> <int><br />
+1 International Business Machines Corporation 139092 2 General Electric Company 47122 3 Intel Corporation 42157 4 Hewlett-Packard Development Company, L.P. 35573 5 Microsoft Corporation 30086 6 Micron Technology, Inc. 28001 7 QUALCOMM Incorporated 24703 8 Texas Instruments Incorporated 24182 9 Xerox Corporation 23174 10 Apple Inc. 21821 ’’’</p>
+</div>
+<div id="task2_recent-patent-activity---top-10-us-companies-in-2019" class="section level2">
+<h2><span class="header-section-number">3.5</span> Task2_Recent patent activity - top 10 US companies in 2019</h2>
+<p>’’’ once I try to convert patent data to data.table, the Rstudio gets stuck, the following code can not run as well. ’’’ patent_2019_tbl&lt;- patent_tbl[ lubridate::year(date) == “2019”]</p>
+<p>setnames(patent_2019_tb,“id”,“patent_id”)</p>
+<p>combined_data_c2 &lt;- merge(x = combined_data_c1, y = patent_2019_tb, by = “patent_id”, all.x = TRUE, all.y = FALSE)</p>
+</div>
+<div id="task3_innovation-in-tech---top-5-uspto-tech-main-classess" class="section level2">
+<h2><span class="header-section-number">3.6</span> Task3_Innovation in Tech - top 5 USPTO tech main classess</h2>
+</div>
+</div>
+<div id="challenge_chapter-5" class="section level1">
+<h1><span class="header-section-number">4</span> Challenge_Chapter 5</h1>
+<div id="challenge-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Challenge 1</h2>
+<div id="load-libraries-and-data" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> 1. Load libraries and data</h3>
+<p>library(tidyverse) library(ggplot2)</p>
+<p>covid_data_tbl &lt;- read_csv(“<a href="https://opendata.ecdc.europa.eu/covid19/casedistribution/csv" class="uri">https://opendata.ecdc.europa.eu/covid19/casedistribution/csv</a>”)</p>
+</div>
+<div id="data-manipluation" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> 2. Data manipluation</h3>
+<p>covid_cumulative_cases_tbl &lt;- covid_data_tbl %&gt;% select(countriesAndTerritories, cases, month, year) %&gt;% filter(year == “2020”) %&gt;% filter(countriesAndTerritories %in% c(“Germany”, “United_Kingdom”, “France”, “Spain”, “Lithuania”, “United_States_of_America”)) %&gt;% group_by(countriesAndTerritories,month)%&gt;% summarize(cumulative_cases = sum(cases)) %&gt;% ungroup() covid_cumulative_cases_tbl</p>
+</div>
+<div id="data-visualization" class="section level3">
+<h3><span class="header-section-number">4.1.3</span> 3. Data visualization</h3>
+<p>covid_cumulative_cases_tbl %&gt;% # Canvas ggplot(aes(x=month, y=cumulative_cases, color=countriesAndTerritories)) +</p>
+<p># Geometries geom_smooth(method = “loess”, span = 0.2) +</p>
+<p># Formatting scale_x_continuous(breaks = covid_cumulative_cases_tbl<span class="math inline">\(month,  labels = month(covid_cumulative_cases_tbl\)</span>month, label = T)) +</p>
+<p>scale_y_continuous(labels = scales::dollar_format(scale = 1e-6, prefix = "“, suffix =”M“)) + scale_color_manual(values=c(”#999999“,”#E69F00“,”#56B4E9“,”#009E73“,”#F0E442“,”#0072B2“))+ labs(title =”COVID-19 confirmed cases worldwide“, x =”Year 2020“, y =”Cumulative Cases")</p>
+</div>
+</div>
+<div id="challenge-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Challenge 2</h2>
+<p>library(maps) library(tidyverse) library(ggplot2) library(scales) library(data.table) library(vroom) library(tictoc)</p>
+<p>world &lt;- map_data(“world”)</p>
+<p>covid_data_tbl &lt;- read_csv(“<a href="https://opendata.ecdc.europa.eu/covid19/casedistribution/csv" class="uri">https://opendata.ecdc.europa.eu/covid19/casedistribution/csv</a>”)</p>
+<p>mortality_rate_tbl &lt;- covid_data_tbl %&gt;% select(countriesAndTerritories, deaths, popData2019) %&gt;% mutate(across(countriesAndTerritories, str_replace_all, "_“,” “)) %&gt;% mutate(countriesAndTerritories = case_when( countriesAndTerritories ==”United Kingdom" ~ “UK”, countriesAndTerritories == “United States of America” ~ “USA”, countriesAndTerritories == “Czechia” ~ “Czech Republic”, TRUE ~ countriesAndTerritories ))%&gt;% group_by(countriesAndTerritories)%&gt;% summarize(total_deaths = sum(deaths), population = max(popData2019), mortality_rate = deaths/popData2019) %&gt;% ungroup() mortality_rate_tbl</p>
+<p>setDT(mortality_rate_tbl) setDT(world)</p>
+<p>covid_map &lt;- left_join(x = world, y = mortality_rate_tbl, by=c(“region” = “countriesAndTerritories”))</p>
+<p>covid_map %&gt;% glimpse()</p>
+<p>covid_map %&gt;% # Canvas ggplot(aes(x=long, y=lat)) + # Geometries geom_map(aes(map_id=region, fill=mortality_rate), map = world) + # Formatting scale_fill_continuous(low = “black”, high = “red”, labels = scales::percent) + labs(title = “Confirmed COVID-19 deaths relative to the size of the population”)</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
